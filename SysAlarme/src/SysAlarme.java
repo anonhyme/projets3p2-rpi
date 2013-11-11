@@ -31,7 +31,7 @@ public class SysAlarme {
 	private final static SysLcd Lcd=new SysLcd(2,16,RS,Strobe,LcdB0,LcdB1,LcdB2,LcdB3); // Initialyse Lcd with 2 rows and 16 character
 	
 	private String state;
-	private boolean armé, alarm;
+	private boolean armed, alarm;
 	char key;
 	char[] passwordEntered={' ',' ',' ',' '};
 	char[] password={'8','4','2','1'};
@@ -40,7 +40,7 @@ public class SysAlarme {
 	
 	public SysAlarme(){
 		
-		armé=alarm=false;
+		armed=alarm=false;
 		state="System ready";
 		indexPass=0;
 		wrongPass=0;
@@ -48,9 +48,9 @@ public class SysAlarme {
 	}
 	
 	public void writeState(){
-		if(armé&&!alarm)
+		if(armed&&!alarm)
 			state="System armed";
-		else if(armé&&alarm)
+		else if(armed&&alarm)
 			state="Alarm!!!!!!!";
 		else
 			state="System ready";
@@ -101,14 +101,14 @@ public class SysAlarme {
 			
 			if(indexPass>3){
 				if(this.comparePass()){
-					armé^=true;	
+					armed=true;	
 					alarm=false;
 					this.deletePass();
 					wrongPass=0;
 				}
 				else{
 					this.deletePass();
-					if(armé){
+					if(armed){
 						wrongPass++;
 						
 						if(wrongPass>2)
