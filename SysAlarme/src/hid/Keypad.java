@@ -11,10 +11,10 @@ import com.pi4j.io.gpio.Pin;
 public class Keypad {
 	
 	
-	final GpioPinDigitalInput key[]={null,null,null,null,null};
-	final GpioController GPIO;
-	public char keyPress;
-	public boolean keyPressed;
+	private final GpioPinDigitalInput key[]={null,null,null,null,null};
+	private final GpioController GPIO;
+	private char keyPress;
+	private boolean keyPressed;
 	
 	
 	public Keypad(Pin I, Pin B0, Pin B1, Pin B2, Pin B3){

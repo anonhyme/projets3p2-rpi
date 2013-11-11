@@ -1,6 +1,6 @@
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import hid.SysLcd;
@@ -41,11 +41,16 @@ public class SysAlarme {
 	public SysAlarme(){
 		
 		armé=alarm=false;
-		state="System ready";
 		indexPass=0;
 		wrongPass=0;
+		
 
 	}
+	
+	public void initSystem(){
+		
+	}
+	
 	
 	public void writeState(){
 		if(armé&&!alarm)
@@ -128,12 +133,12 @@ public class SysAlarme {
 
 		SysAlarme monSystem= new SysAlarme();
 		
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+//        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         monSystem.writeState();
         while(true) {
         	monSystem.loopKeypad();
-        	monSystem.Lcd.LcdWrite(1,formatter.format(new Date()));
-        	Thread.sleep(100);
+//        	monSystem.Lcd.LcdWrite(1,formatter.format(new Date()));
+//        	Thread.sleep(100);
 
         }
 	}
