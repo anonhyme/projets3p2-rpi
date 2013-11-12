@@ -188,7 +188,8 @@ public class SysAlarme implements Runnable {
 					wrongPass++;
 					this.deletePass();
 					if(wrongPass>=3)
-						this.alarmUp();
+						if(armed)
+							this.alarmUp();
 				}
 			}
 		}
