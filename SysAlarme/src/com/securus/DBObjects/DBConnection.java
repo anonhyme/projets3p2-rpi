@@ -19,8 +19,10 @@ public class DBConnection {
 	// string to call JDBC connexion class (java/mysql)
 	private static final String JDBCclass = "com.mysql.jdbc.Driver";
 	
+	private static final String dbAddress = "192.168.0.108";
+	
 	//connexion string without DB name
-	private String connStr = "jdbc:mysql://localhost:3306/";
+	private String connStr = "jdbc:mysql://" + dbAddress + ":3306/";
 	
 	// Database name
 	private String dbName;
@@ -245,11 +247,11 @@ public class DBConnection {
 	
 	public static void main(String[] args) throws SQLException, ClassNotFoundException
 	{	
-		/*DBConnection conn = new DBConnection("root","ROOT","projetP2S3");
+		DBConnection conn = new DBConnection("rpi","admin","projetP2S3");
 		Thread t = new Thread(new DBReadActions(conn,2));
 		t.start();
 		
-		int a = DBUser.UserLogin(conn, "Antoine", "Bouchard");
+		/*int a = DBUser.UserLogin(conn, "Antoine", "Bouchard");
 		DBUser user = new DBUser(conn,a);
 		System.out.println("Vous êtes bien chez "+user.getFirstName()+" "+user.getLastName()+
 				" qui habite au "+user.getAddress());

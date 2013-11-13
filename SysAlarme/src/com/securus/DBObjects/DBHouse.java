@@ -77,7 +77,7 @@ public class DBHouse extends DBObject {
 	 * @return	returns true if the information was correctly retrieved
 	 * @throws SQLException
 	 */
-	private boolean retrieveDBData(DBConnection conn)
+	private synchronized boolean retrieveDBData(DBConnection conn)
 		throws SQLException
 	{
 		
@@ -209,7 +209,7 @@ public class DBHouse extends DBObject {
 	 * @return					the action id if the action was successfully added to DB, -1 if not
 	 * @throws SQLException
 	 */
-	public int lockDoor(DBConnection conn,int doorId) 
+	public synchronized int lockDoor(DBConnection conn,int doorId) 
 			throws SQLException
 	{
 		conn.queryStoredProcedure("barrerPorte",this.id, doorId);
@@ -225,7 +225,7 @@ public class DBHouse extends DBObject {
 	 * @return					the action id if the action was successfully added to DB, -1 if not
 	 * @throws SQLException
 	 */
-	public int unlockDoor(DBConnection conn,int doorId) 
+	public synchronized int unlockDoor(DBConnection conn,int doorId) 
 			throws SQLException
 	{
 		conn.queryStoredProcedure("debarrerPorte",this.id, doorId);
@@ -241,7 +241,7 @@ public class DBHouse extends DBObject {
 	 * @return 1 if action successful, 0 if not successful
 	 * @throws SQLException 
 	 */
-	public int armAlarmSystem(DBConnection conn) throws SQLException {
+	public synchronized int armAlarmSystem(DBConnection conn) throws SQLException {
 		
 		conn.queryStoredProcedure("armerAlarme",this.id);
 		return conn.getNextId(); // if successful
@@ -255,7 +255,7 @@ public class DBHouse extends DBObject {
 	 * @return 1 if action successful, 0 if not successful
 	 * @throws SQLException 
 	 */
-	public int disarmAlarmSystem(DBConnection conn) throws SQLException {
+	public synchronized int disarmAlarmSystem(DBConnection conn) throws SQLException {
 		
 		conn.queryStoredProcedure("desarmerAlarme",this.id);
 		return conn.getNextId(); // if successful

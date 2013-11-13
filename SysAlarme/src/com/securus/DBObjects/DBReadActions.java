@@ -4,19 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.securus.DBObjects.DBConnection;
-import com.securus.rpi.alarmsystem.AlarmSystem;
 
 public class DBReadActions implements Runnable
 {
 	private int idHouse;
 	private DBConnection conn;
-	private AlarmSystem alarmSystem;
-
-	public DBReadActions(DBConnection conn, int houseId, AlarmSystem alarmSystem) throws SQLException 
+	
+	public DBReadActions(DBConnection conn, int houseId) throws SQLException 
 	{
 		this.idHouse = houseId;
 		this.conn = conn;
-		this.alarmSystem = alarmSystem;
 	}
 	
 	 public void run() 
@@ -29,7 +26,7 @@ public class DBReadActions implements Runnable
 			} 
 			catch (SQLException ex) {
 				
-				System.err.println("Exception lors de la recherche d'actions a executer: " + ex);
+				//System.err.println("Exception lors de la recherche d'actions a executer: " + ex);
 			}
 			try {
 				Thread.sleep(1000);
@@ -43,22 +40,24 @@ public class DBReadActions implements Runnable
 	
 	public void getWaitingActionsFromDB() throws SQLException
 	{
-		boolean actionNoError = true;
+		boolean actionSuccess = true;
 		this.conn.queryStoredProcedure("getWaitingActions", this.idHouse);
 		ResultSet rs = this.conn.getResultSet();
 		
 		while (rs.next())
 		{
-			actionNoError = doAction(Integer.parseInt(rs.getString("id")), 
-									Integer.parseInt(rs.getString("idTypeAction")),
-									Integer.parseInt(rs.getString("idPorte")));
-			if (actionNoError = true)
+			int id = rs.getInt("id");
+			int idTypeAction = rs.getInt("idTypeAction");
+			int idPorte = rs.getInt("idPorte");
+			
+			actionSuccess = doAction(id, idTypeAction, idPorte);
+			if (actionSuccess == false)
 			{
-				this.conn.nonQueryStoredProcedure("setStatutAction", Integer.parseInt(rs.getString("id")), 2);
+				this.conn.nonQueryStoredProcedure("setStatutAction", id, 2);
 			}
 			else
 			{
-				this.conn.nonQueryStoredProcedure("setStatutAction", Integer.parseInt(rs.getString("id")), 3);
+				this.conn.nonQueryStoredProcedure("setStatutAction", id, 3);
 			}
 		}
 	}
@@ -69,25 +68,24 @@ public class DBReadActions implements Runnable
 		{
 			switch (TypeAction)
 			{
+			case 1:		// Action nulle
+				
+				break;
 			case 2:		// Armer le systeme d'alarme
-				
-				alarmSystem.armSystem();
-				
+				conn.queryStoredProcedure("setAlarmStatut", 2, 1);
+				System.out.println("Alarm system armed");
 				break;
 			case 3:		// Desarmer le systeme d'alarme
-				
-				alarmSystem.disarmSystem();
-				
+				conn.queryStoredProcedure("setAlarmStatut", 2, 0);
+				System.out.println("Alarm system disarmed");
 				break;
 			case 4:		// Deverouiller la porte
-				
-				alarmSystem.unlockDoor(idPorte);
-				
+				conn.queryStoredProcedure("setLockStatut", idPorte, 0);
+				System.out.println("DoorUnlocked : " + idPorte);
 				break;
 			case 5:		// Verouiller la porte
-				
-				alarmSystem.lockDoor(idPorte);
-				
+				conn.queryStoredProcedure("setLockStatut", idPorte, 1);
+				System.out.println("DoorLocked : " + idPorte);
 				break;
 			default:
 				
